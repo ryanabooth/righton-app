@@ -1,0 +1,149 @@
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url('./Fonts/lato-bold-italic.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url('./Fonts/lato-bold-italic-2.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url('./Fonts/lato-light.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url('./Fonts/lato-light-2.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url('./Fonts/lato-regular.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url('./Fonts/lato-regular-2.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url('./Fonts/lato-bold.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url('./Fonts/lato-bold-2.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* KaTeX*/
+@font-face {
+  font-family: 'KaTeX_Main';
+  font-style: normal;
+  font-weight: 400;
+  src: local('KaTeX Main'), local('KaTeX_Main'), url('./Fonts/KaTeX_Main-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'KaTeX_Math';
+  font-style: normal;
+  font-weight: 400;
+  src: local('KaTeX Math'), local('KaTeX_Math'), url('./Fonts/KaTeX_Math-Italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'KaTeX_Size2';
+  font-style: normal;
+  font-weight: 400;
+  src: local('KaTeX Size2'), local('KaTeX_Size2'), url('./Fonts/KaTeX_Size2-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'KaTeX_Size4';
+  font-style: normal;
+  font-weight: 400;
+  src: local('KaTeX Size4'), local('KaTeX_Size4'), url('./Fonts/KaTeX_Size4-Regular.woff2') format('woff2');
+}
+
+/* KaTeX_AMS-Regular.ttf
+KaTeX_AMS-Regular.woff
+KaTeX_AMS-Regular.woff2
+KaTeX_Caligraphic-Bold.ttf
+KaTeX_Caligraphic-Bold.woff
+KaTeX_Caligraphic-Bold.woff2
+KaTeX_Caligraphic-Regular.ttf
+KaTeX_Caligraphic-Regular.woff
+KaTeX_Caligraphic-Regular.woff2
+KaTeX_Fraktur-Bold.ttf
+KaTeX_Fraktur-Bold.woff
+KaTeX_Fraktur-Bold.woff2
+KaTeX_Fraktur-Regular.ttf
+KaTeX_Fraktur-Regular.woff
+KaTeX_Fraktur-Regular.woff2
+KaTeX_Main-Bold.ttf
+KaTeX_Main-Bold.woff
+KaTeX_Main-Bold.woff2
+KaTeX_Main-BoldItalic.ttf
+KaTeX_Main-BoldItalic.woff
+KaTeX_Main-BoldItalic.woff2
+KaTeX_Main-Italic.ttf
+KaTeX_Main-Italic.woff
+KaTeX_Main-Italic.woff2
+KaTeX_Main-Regular.ttf
+KaTeX_Main-Regular.woff
+KaTeX_Math-BoldItalic.ttf
+KaTeX_Math-BoldItalic.woff
+KaTeX_Math-BoldItalic.woff2
+KaTeX_Math-Italic.ttf
+KaTeX_Math-Italic.woff
+KaTeX_Math-Regular.ttf
+KaTeX_Math-Regular.woff
+KaTeX_Math-Regular.woff2
+KaTeX_SansSerif-Bold.ttf
+KaTeX_SansSerif-Bold.woff
+KaTeX_SansSerif-Bold.woff2
+KaTeX_SansSerif-Italic.ttf
+KaTeX_SansSerif-Italic.woff
+KaTeX_SansSerif-Italic.woff2
+KaTeX_SansSerif-Regular.ttf
+KaTeX_SansSerif-Regular.woff
+KaTeX_SansSerif-Regular.woff2
+KaTeX_Script-Regular.ttf
+KaTeX_Script-Regular.woff
+KaTeX_Script-Regular.woff2
+KaTeX_Size1-Regular.ttf
+KaTeX_Size1-Regular.woff
+KaTeX_Size1-Regular.woff2
+KaTeX_Size2-Regular.ttf
+KaTeX_Size2-Regular.woff
+KaTeX_Size3-Regular.ttf
+KaTeX_Size3-Regular.woff
+KaTeX_Size3-Regular.woff2
+KaTeX_Size4-Regular.ttf
+KaTeX_Size4-Regular.woff
+KaTeX_Typewriter-Regular.ttf
+KaTeX_Typewriter-Regular.woff
+KaTeX_Typewriter-Regular.woff2 */
