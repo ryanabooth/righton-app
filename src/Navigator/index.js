@@ -1,12 +1,17 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-import OnboardApp from '../screens/OnboardApp';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import Splash from '../screens/Splash';
+import OnboardAppRouter from '../screens/OnboardAppRouter';
+import OnboardTeacherRouter from '../screens/OnboardTeacherRouter';
+import StudentFirst from '../Student/screens/StudentFirst';
+import TeacherFirst from '../Teacher/screens/TeacherFirst';
 import StudentApp from '../Student';
 import TeacherApp from '../Teacher';
 
 
-const RootNavigator = createStackNavigator({
+const RootNavigator = createSwitchNavigator({
+
+
   Splash: {
     screen: props => (
       <Splash navigation={props.navigation} {...props.screenProps} />
@@ -15,30 +20,74 @@ const RootNavigator = createStackNavigator({
       header: null,
     },
   },
-  OnboardApp: {
+
+
+  OnboardAppRouter: {
     screen: props => (
-      <OnboardApp rootNavigator={props.navigation} {...props} />
-    ), 
-    navigationOptions: { 
+      <OnboardAppRouter navigation={props.navigation} />
+    ),
+    navigationOptions: {
       header: null,
     },
   },
+
+
+  OnboardTeacherRouter: {
+    screen: (props) => {
+      const { navigation, screenProps } = props;
+
+      return (
+        <OnboardTeacherRouter navigation={navigation} {...screenProps} />
+      );
+    },
+    navigationOptions: {
+      header: null,
+    },
+  },
+
+
+  TeacherFirst: {
+    screen: TeacherFirst,
+    navigationOptions: {
+      header: null,
+    },
+  },
+
+
+  StudentFirst: {
+    screen: (props) => {
+      const { navigation, screenProps, ...otherProps } = props;
+
+      return (
+        <StudentFirst
+          navigation={navigation}
+          {...screenProps}
+          {...otherProps}
+        />
+      );
+    },
+    navigationOptions: {
+      header: null,
+    },
+  },
+
+
   StudentApp: {
-    screen: props => (
-      <StudentApp rootNavigator={props.navigation} {...props} />
-    ), 
+    screen: StudentApp,
     navigationOptions: { 
       header: null,
     },
   },
+
+
   TeacherApp: {
-    screen: props => (
-      <TeacherApp rootNavigator={props.navigation} {...props} />
-    ), 
+    screen: TeacherApp,
     navigationOptions: { 
       header: null,
     },
   },
+
+  
 }, { initialRouteName: 'Splash' });
 
 

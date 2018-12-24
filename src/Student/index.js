@@ -1,10 +1,10 @@
 import React from 'react';
-import { createDrawerNavigator, createAppContainer } from 'react-navigation';
+import { createSwitchNavigator } from 'react-navigation';
 import Dashboard from './screens/Dashboard';
-import GameApp from './screens/GameApp';
+import GamePreview from './screens/GamePreview';
+import GameTricks from './screens/GameTricks';
 
-
-const StudentApp = createDrawerNavigator({
+const StudentSwitchNavigator = createSwitchNavigator({
 
 
   Dashboard: {
@@ -15,30 +15,32 @@ const StudentApp = createDrawerNavigator({
         <Dashboard 
           {...screenProps}
           {...otherProps}
-          studentAppNavigator={navigation}
+          navigation={navigation}
         />
       );
     },
     navigationOptions: {
-      drawerLabel: 'Dashboard',
+
     },
   },
 
 
-  GameApp: {
-    screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
-
-      return (
-        <GameApp 
-          {...screenProps}
-          {...otherProps}
-          studentAppNavigator={navigation}
-        />
-      );
-    },
+  GamePreview: {
+    screen: props => (
+      <GamePreview screenProps={{ ...props.screenProps }} navigation={props.navigation} />
+    ),
     navigationOptions: {
-      drawerLabel: ' ',
+
+    },
+  },
+
+
+  GameTricks: {
+    screen: props => (
+      <GameTricks screenProps={{ ...props.screenProps }} navigation={props.navigation} />
+    ),
+    navigationOptions: {
+
     },
   },
 
@@ -46,10 +48,25 @@ const StudentApp = createDrawerNavigator({
 }, { header: null });
 
 
-const StudentAppContainer = createAppContainer(StudentApp);
+class StudentApp extends React.Component {
+  static router = StudentSwitchNavigator.router;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    };
+  }
 
 
-export default (props) => {
-  const { screenProps, ...otherProps } = props;
-  return <StudentAppContainer screenProps={{ ...screenProps, ...otherProps }} />;
-};
+  render() {
+    const { navigation, screenProps } = this.props;
+
+    return (
+      <StudentSwitchNavigator navigation={navigation} screenProps={{ ...screenProps }} />
+    );
+  }
+}
+
+
+export default StudentApp;

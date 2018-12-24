@@ -51,7 +51,7 @@ export default class OnboardIntroSlides extends React.PureComponent {
 
 
   // navigateTo(routeName) {
-  //   this.props.rootNavigator.navigate(routeName);
+  //   this.props.navigation.navigate(routeName);
   // }
 
 
@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     alignItems: 'center',
+    paddingHorizontal: 20,
     position: 'absolute',
     top: 65,
   },

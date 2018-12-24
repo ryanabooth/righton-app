@@ -12,7 +12,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import { colors, fonts } from '../../../utils/theme';
 
 
-class Reports extends React.PureComponent {
+class Maker extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       navigation: PropTypes.shape({
@@ -40,16 +40,19 @@ class Reports extends React.PureComponent {
 
   renderHeader = () => (
     <View style={styles.header}>
-      <Text style={styles.headerTitle}>Reports</Text>
+      <Text style={styles.headerTitle}>Quiz Maker</Text>
     </View>
   );
 
 
   renderMessage = () => (
     <View style={styles.message}>
-      <Aicon name={'bar-chart'} style={styles.messageIcon} />
-      <Text style={styles.messageTeaser}>{'Looks like you haven\'t hosted any games yet.'}</Text>
-      <Text style={styles.messageTeaser}>{'Get started and review results here.'}</Text>
+      <Aicon name={'puzzle-piece'} style={styles.messageIcon} />
+      <Text style={styles.messageTeaser}>
+        Access our repository of questions and student generated {'&'} tested
+        distractors to include in your homework and exams. 
+      </Text>
+      <Text style={styles.messageDetail}>Coming soon!</Text>
     </View>
   );
 
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
   messageTeaser: {
     color: colors.white,
     fontSize: fonts.medium,
-    marginBottom: 25,
+    textAlign: 'center',
   },
   scrollview: {
     flexGrow: 1,
@@ -120,4 +123,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default props => <Reports screenProps={{ ...props }} />;
+export default props => <Maker screenProps={{ ...props }} />;

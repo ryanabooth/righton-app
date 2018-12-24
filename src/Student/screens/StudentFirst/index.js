@@ -1,75 +1,66 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-import Age from '../../components/Age';
+import Swiper from 'react-native-swiper';
+import AgeInput from './StudentFirstAgeInput';
 import GameRoom from './StudentFirstGameRoom';
 
 
-const StudentFirst = createStackNavigator({
+export default class StudentFirst extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.swiper = undefined;
+
+    this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
+    this.handleNavigateToOnboardApp = this.handleNavigateToOnboardApp.bind(this);
+    this.handleSwipeToAge = this.handleSwipeToAge.bind(this);
+    this.handleSwipeToRoom = this.handleSwipeToRoom.bind(this);
+  }
 
 
-  Age: {
-    screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
+  handleRoomSubmit() {
+    this.props.navigation.navigate('StudentApp');
+  }
 
-      return (
-        <Age 
-          {...screenProps}
-          {...otherProps}
-          rootNavigator={screenProps.navigation}
-          studentFirstNavigator={navigation}
+
+  handleSwipeToAge() {
+    this.swiper.scrollBy(-1, false);
+  }
+
+
+  handleSwipeToRoom() {
+    this.swiper.scrollBy(1, false);
+  }
+
+
+  handleNavigateToOnboardApp() {
+    this.props.navigation.navigate('OnboardAppRouter');
+  }
+
+
+  render() {
+    return (
+      <Swiper
+        horizontal
+        index={0}
+        loadMinimal={false}
+        loop={false}
+        ref={(ref) => { this.swiper = ref; }}
+        scrollEnabled={false}
+        showsPagination={false}
+      >
+        <AgeInput
+          screenProps={{
+            handleAgeSubmit: this.handleSwipeToRoom,
+            handleBack: this.handleNavigateToOnboardApp,
+          }}
         />
-      );
-    },
-    navigationOptions: {
-      header: null,
-    },
-  },
-
-
-  GameRoom: {
-    screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
-
-      return (
         <GameRoom
-          {...screenProps}
-          {...otherProps}
-          studentFirstNavigator={navigation}
+          screenProps={{
+            handleRoomSubmit: this.handleRoomSubmit,
+            handleBack: this.handleSwipeToAge,
+          }}
         />
-      );
-    },
-    navigationOptions: {
-      header: null,
-    },
-  },
-
-
-  // SignUp: {
-  //   screen: (props) => {
-  //     const { screenProps, ...otherProps } = props;
-
-  //     return (
-  //       <SignUp
-  //         { ...screenProps }
-  //         { ...otherProps }
-  //         studentFirstNavigator={navigation}
-  //         onSignUp={() => otherProps.navigation.navigate('LogIn')}
-  //       />
-  //     )
-  //   },
-  //   navigationOptions: {
-  //     header: null,
-  //   },
-  // },
-
-
-}, { header: null });
-
-
-const StudentFirstContainer = createAppContainer(StudentFirst);
-
-
-export default (props) => {
-  const { screenProps, ...otherProps } = props;
-  return <StudentFirstContainer screenProps={{ ...screenProps, ...otherProps }} />;
-};
+      </Swiper>
+    );
+  }
+}

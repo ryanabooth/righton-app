@@ -12,13 +12,11 @@ import OnboardTeacherIntroSlides from '../OnboardTeacherIntroSlides';
 
 export default class OnboardTeacherRouter extends React.PureComponent {
   static propTypes = {
-    onboardNavigator: PropTypes.shape({ navigate: PropTypes.func }),
-    rootNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+    navigation: PropTypes.shape({ navigate: PropTypes.func }),
   }
   
   static defaultProps = {
-    onboardNavigator: {},
-    rootNavigator: {},
+    navigation: {},
   }
   
   constructor(props) {
@@ -30,12 +28,12 @@ export default class OnboardTeacherRouter extends React.PureComponent {
 
 
   handleTeacherOnboard() { 
-    this.props.onboardNavigator.navigate('TeacherFirst');
+    this.props.navigation.navigate('TeacherFirst');
   }
 
 
   handleTeacherApp() {
-    this.props.rootNavigator.navigate('TeacherApp');
+    this.props.navigation.navigate('TeacherApp');
   }
 
 
@@ -75,6 +73,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   maybeContainer: {
+    // Removing background color causes Swiper dot primary color to shine through
+    backgroundColor: colors.dark,
     bottom: 20,
     left: 0,
     position: 'absolute',

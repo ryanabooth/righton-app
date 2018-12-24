@@ -10,10 +10,25 @@ import Touchable from 'react-native-platform-touchable';
 import ButtonBack from '../../../../components/ButtonBack';
 import ButtonWide from '../../../../components/ButtonWide';
 import { colors, fonts } from '../../../../utils/theme';
-import styles from '../../../components/Age/styles';
+import styles from '../styles';
 
 
-class GameRoom extends React.Component {
+export default class GameRoom extends React.PureComponent {
+  static propTypes = {
+    screenProps: PropTypes.shape({
+      handleRoomSubmit: PropTypes.func,
+      handleBack: PropTypes.func.isRequired,
+    }),
+  }
+
+  
+  static defaultProps = {
+    screenProps: {
+      handleRoomSubmit: () => {},
+      handleBack: () => {},
+    },
+  }
+
   constructor(props) {
     super(props);
 
@@ -21,20 +36,20 @@ class GameRoom extends React.Component {
       room: '',
     };
 
-    this.handleRoomInput = this.handleRoomInput.bind(this);
-    this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
+    this.onRoomInput = this.onRoomInput.bind(this);
+    this.onRoomSubmit = this.onRoomSubmit.bind(this);
   }
 
 
-  handleRoomInput(room) {
+  onRoomInput(room) {
     this.setState({ room });
   }
 
 
-  handleRoomSubmit() {
+  onRoomSubmit() {
     // TODO Handle entering game in DynamoDB
     // Hydrate Dashboard w/ game details
-    this.props.screenProps.rootNavigator.navigate('StudentApp');
+    this.props.screenProps.handleRoomSubmit();
   }
 
 
@@ -43,21 +58,21 @@ class GameRoom extends React.Component {
       room,
     } = this.state;
 
-    const { studentFirstNavigator } = this.props.screenProps;
+    const { handleBack } = this.props.screenProps;
 
     return (
       <View style={styles.container}>
         <ButtonBack
           buttonStyles={{ top: 40 }}
-          navigator={studentFirstNavigator}
+          onPress={handleBack}
         />
         <Text style={styles.title}>Game Room</Text>
         <TextInput
           keyboardType={'default'}
           maxLength={100}
           multiline={false}
-          onChangeText={this.handleRoomInput}
-          onSubmitEditing={this.handleRoomSubmit}
+          onChangeText={this.onRoomInput}
+          onSubmitEditing={this.onRoomSubmit}
           placeholder={'Room Name'}
           placeholderTextColor={colors.primary} 
           returnKeyType={'done'}
@@ -69,27 +84,20 @@ class GameRoom extends React.Component {
         <Touchable
           activeOpacity={0.8}
           hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-          onPress={this.handleRoomSubmit}
+          onPress={this.onRoomSubmit}
           style={GameRoomStyles.skipButton}
         >
           <Text style={GameRoomStyles.skip}>Join later</Text>
         </Touchable>
         <ButtonWide
           label={'Enter Game'}
-          onPress={this.handleRoomSubmit}
+          onPress={this.onRoomSubmit}
         />
       </View>
     );
   }
 }
 
-GameRoom.propTypes = {
-  screenProps: PropTypes.shape({ type: PropTypes.any }),
-};
-
-GameRoom.defaultProps = {
-  screenProps: {},
-};
 
 const GameRoomStyles = StyleSheet.create({
   skip: {
@@ -101,5 +109,3 @@ const GameRoomStyles = StyleSheet.create({
     position: 'absolute',
   },
 });
-
-export default props => <GameRoom screenProps={{ ...props }} />;

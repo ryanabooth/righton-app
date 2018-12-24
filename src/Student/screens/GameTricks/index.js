@@ -17,7 +17,8 @@ import { colors } from '../../../utils/theme';
 
 export default class GamePreview extends React.PureComponent {
   static propTypes = {
-    GameAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+    // GameAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+    navigator: PropTypes.shape({ navigate: PropTypes.func }),
     gameState: PropTypes.shape({
       team0: PropTypes.shape({
         question: PropTypes.string,
@@ -31,7 +32,8 @@ export default class GamePreview extends React.PureComponent {
   }
   
   static defaultProps = {
-    GameAppNavigator: {},
+    // GameAppNavigator: {},
+    navigator: {},
     gameState: {
       team0: {
         question: __DEV__ ? 'What did you eat for breakfast?' : '',
@@ -184,7 +186,8 @@ export default class GamePreview extends React.PureComponent {
             marginHorizontal: 10,
             position: 'relative',
           }}
-          iconLabel={'A'}
+          icon={trick1 && 'check'}
+          iconLabel={!trick1 ? 'A' : ''}
           iconStyles={{
             color: icon1,
           }}
@@ -197,7 +200,8 @@ export default class GamePreview extends React.PureComponent {
             marginHorizontal: 10,
             position: 'relative',
           }}
-          iconLabel={'B'}
+          icon={trick2 && 'check'}
+          iconLabel={!trick2 ? 'B' : ''}
           iconStyles={{
             color: icon2,
           }}
@@ -210,7 +214,8 @@ export default class GamePreview extends React.PureComponent {
             marginHorizontal: 10,
             position: 'relative',
           }}
-          iconLabel={'C'}
+          icon={trick3 && 'check'}
+          iconLabel={!trick3 ? 'C' : ''}
           iconStyles={{
             color: icon3,
           }}
@@ -283,7 +288,7 @@ export default class GamePreview extends React.PureComponent {
         </View>
         {showDoneButton &&
         <ButtonRound
-          icon={'check'}
+          icon={'arrow-right'}
           onPress={() => {}}
         />}
         {this.renderTricksButtons()}
