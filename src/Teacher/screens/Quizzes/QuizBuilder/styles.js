@@ -90,6 +90,9 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
+  marginTop: {
+    marginTop: 15,
+  },
   placeholder: {
     color: colors.lightGray,
   },
@@ -133,11 +136,30 @@ export default StyleSheet.create({
     alignSelf: 'stretch',
     marginTop: 15,
   },
+  row: {
+    flexDirection: 'row',
+  },
   scrollview: {
     flexGrow: 1,
     paddingBottom: 95,
     paddingTop: 25,
     paddingHorizontal: 15,
+  },
+  timeSelectionContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: 30,
+    bottom: -30,
+    height: 60,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: -10,
+    width: 60,
+    zIndex: 2,
+  },
+  timeSelectionLabel: {
+    color: colors.white,
+    fontSize: fonts.medium,
   },
   title: {
     color: colors.dark,
