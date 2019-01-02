@@ -51,40 +51,6 @@ const convertUrlType = (param, type) => {
   }
 }
 
-/********************************
- * HTTP Get method for list objects *
- ********************************/
-
-app.get(path + hashKeyPath, function(req, res) {
-  var condition = {}
-  condition[partitionKeyName] = {
-    ComparisonOperator: 'EQ'
-  }
-  
-  if (userIdPresent && req.apiGateway) {
-    condition[partitionKeyName]['AttributeValueList'] = [req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH ];
-  } else {
-    try {
-      condition[partitionKeyName]['AttributeValueList'] = [ convertUrlType(req.params[partitionKeyName], partitionKeyType) ];
-    } catch(err) {
-      res.json({error: 'Wrong column type ' + err});
-    }
-  }
-
-  let queryParams = {
-    TableName: tableName,
-    KeyConditions: condition
-  } 
-
-  dynamodb.query(queryParams, (err, data) => {
-    if (err) {
-      res.json({error: 'Could not load items: ' + err});
-    } else {
-      res.json(data.Items);
-    }
-  });
-});
-
 /*****************************************
  * HTTP Get method for get single object *
  *****************************************/
@@ -200,8 +166,9 @@ app.delete(path + '/object' + hashKeyPath + sortKeyPath, function(req, res) {
 
   let removeItemParams = {
     TableName: tableName,
-    Key: params
+    Key: params,
   }
+
   dynamodb.delete(removeItemParams, (err, data)=> {
     if(err) {
       res.json({error: err, url: req.url});
