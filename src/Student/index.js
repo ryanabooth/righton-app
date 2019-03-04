@@ -2,23 +2,29 @@ import React from 'react';
 import { createSwitchNavigator } from 'react-navigation';
 import Dashboard from './screens/Dashboard';
 import GamePreview from './screens/GamePreview';
-import GameTricks from './screens/GameTricks';
+import GameQuiz from './screens/GameQuiz';
+import GameReasons from './screens/GameReasons';
+import GameFinal from './screens/GameFinal';
+import StudentProfile from './screens/StudentProfile';
+
 
 const StudentSwitchNavigator = createSwitchNavigator({
 
 
   Dashboard: {
-    screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
+    screen: props => (
+      <Dashboard {...props} />
+    ),
+    navigationOptions: {
 
-      return (
-        <Dashboard 
-          {...screenProps}
-          {...otherProps}
-          navigation={navigation}
-        />
-      );
     },
+  },
+
+
+  StudentProfile: {
+    screen: props => (
+      <StudentProfile {...props} />
+    ),
     navigationOptions: {
 
     },
@@ -35,9 +41,29 @@ const StudentSwitchNavigator = createSwitchNavigator({
   },
 
 
-  GameTricks: {
+  GameQuiz: {
     screen: props => (
-      <GameTricks screenProps={{ ...props.screenProps }} navigation={props.navigation} />
+      <GameQuiz screenProps={{ ...props.screenProps }} navigation={props.navigation} />
+    ),
+    navigationOptions: {
+
+    },
+  },
+
+
+  GameReasons: {
+    screen: props => (
+      <GameReasons screenProps={{ ...props.screenProps }} navigation={props.navigation} />
+    ),
+    navigationOptions: {
+
+    },
+  },
+
+
+  GameFinal: {
+    screen: props => (
+      <GameFinal screenProps={{ ...props.screenProps }} navigation={props.navigation} />
     ),
     navigationOptions: {
 
@@ -63,7 +89,10 @@ class StudentApp extends React.Component {
     const { navigation, screenProps } = this.props;
 
     return (
-      <StudentSwitchNavigator navigation={navigation} screenProps={{ ...screenProps }} />
+      <StudentSwitchNavigator
+        navigation={navigation}
+        screenProps={{ ...this.props, ...screenProps }}
+      />
     );
   }
 }

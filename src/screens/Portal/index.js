@@ -1,9 +1,10 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
+import KeepAwake from 'react-native-keep-awake';
 // import Triangle from '../../components/Triangle';
 import Circle from '../../components/Circle';
-import { colors, deviceHeight, deviceWidth, fonts } from '../../utils/theme';
+import { colors, deviceHeight, deviceWidth } from '../../utils/theme';
 
 const circleOne = deviceHeight;
 const circleTwo = deviceHeight - 150;
@@ -83,7 +84,7 @@ export default class Portal extends React.PureComponent {
   igniteCountdown(count) {
     if (count === 1) {
       setTimeout(() => {
-        // TODO: Render next event
+        // Render next event
       }, 1000);
     } else {
       this.setState({ countdown: count });
@@ -95,8 +96,6 @@ export default class Portal extends React.PureComponent {
 
   renderMessageType(type) {
     switch (type) {
-      case 'righton':
-        return this.renderRightOnMessage();
       case 'single':
         return this.renderSingleMessage();
       case 'doubleSub':
@@ -110,47 +109,6 @@ export default class Portal extends React.PureComponent {
       default:
         return null;
     }
-  }
-
-  renderRightOnMessage() {
-    // *TODO: Where do we check whether players share the same wrong answers?
-    // - This must happen prior to rendering this screen as the `messageValues` prop must be set.
-    // TODO: Replace TouchableOpacity w/ react-native-touchable
-    const { players } = this.props.messageValues; 
-    // @prop players: [{image: base64, name: playerName}, ...]
-    let others = '';
-    for (let i = 1; i < players.length; i += 1) {
-      others += ` and ${players[i].name}`;
-    }
-    return (
-      <View style={styles.rightOnContainer}>
-        <Text style={styles.mainMessage}>RIGHT ON!</Text>
-        <Text style={styles.subMessage}>{`You${others} came up with the same wrong answer!`}</Text>
-        <View style={styles.rightOnPlayersContainer}>
-          { 
-            players.map(player => (
-              <View style={styles.rightOnPlayerContainer}>
-                {
-                  player.image ? 
-                    <Image source={{ uri: player.image }} style={styles.rightOnPlayerImage} />
-                    : 
-                    <View style={styles.rightOnPlayerImage} />
-                }
-                <Text style={styles.rightOnPlayerName}>{ player.name }</Text>
-              </View>
-            )) 
-          }
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.rightOnWaveContainer}
-          onPress={() => {}}
-        >
-          { /* Wave icon */ }
-          <Text style={styles.subMessage}>Wave</Text>
-        </TouchableOpacity>
-      </View>
-    );
   }
 
   renderSingleMessage() {
@@ -212,18 +170,20 @@ export default class Portal extends React.PureComponent {
       //   players: [{image, name}, {image, name}, ...],
       //   rewardImageUri: '../../assets/rewards/icon.png',
       // }
-      messageType, // "rightOn", "single", "doubleSub", "doubleSuper", "reward", "countdown"
+      // messageType, // "rightOn", "single", "doubleSub", "doubleSuper", "reward", "countdown"
+      messageValues,
       // userImage,
     } = this.props;
 
-    const { countdown } = this.state;
+    // const { countdown } = this.state;
 
-    const circleFourBackground = countdown === null || messageType !== 'rightOn' ? '#000' : null;
+    // const circleFourBackground = countdown === null || messageType !== 'rightOn' ? '#000' : null;
 
     return (
       <View style={styles.container}>
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
-        { this.renderMessageType(messageType) }
+        {/* { this.renderMessageType(messageType) } */}
 
         <Circle styles={{ height: circleOne, width: circleOne }} />
         <Circle styles={{ height: circleTwo, width: circleTwo }} />
@@ -232,7 +192,6 @@ export default class Portal extends React.PureComponent {
           styles={{
             height: circleFour,
             width: circleFour,
-            backgroundColor: circleFourBackground,
             borderWidth: 1,
             opacity: 0.5,
           }} 
@@ -240,10 +199,11 @@ export default class Portal extends React.PureComponent {
         <Circle styles={{ height: circleFive, width: circleFive }} />
         <Circle styles={{ height: circleSix, width: circleSix, borderWidth: 1 }} />
         <Circle 
+          message={messageValues.message}
           styles={{
             height: circleSeven,
             width: circleSeven,
-            backgroundColor: colors.white
+            backgroundColor: colors.primary
           }}
         />
         <Circle styles={{ height: circleEight, width: circleEight }} />
@@ -262,14 +222,8 @@ export default class Portal extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.dark,
     flex: 1,
     justifyContent: 'center',
-  },
-  mainMessage: {
-    color: colors.primary,
-    fontSize: fonts.medium,
-    fontStyle: 'italic',
-    zIndex: 10,
   },
 });

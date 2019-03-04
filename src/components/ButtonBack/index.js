@@ -1,9 +1,9 @@
 import React from 'react';
 import {
   Keyboard,
-  StyleSheet,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors } from '../../utils/theme';
@@ -11,6 +11,7 @@ import { colors } from '../../utils/theme';
 export default class ButtonBack extends React.PureComponent {
   static propTypes = {
     buttonStyles: PropTypes.shape({ type: PropTypes.any }),
+    iconName: PropTypes.string,
     iconStyles: PropTypes.shape({ type: PropTypes.any }),
     navigator: PropTypes.shape({
       goBack: PropTypes.func,
@@ -20,19 +21,14 @@ export default class ButtonBack extends React.PureComponent {
   
   static defaultProps = {
     buttonStyles: {},
+    iconName: 'arrow-left',
     iconStyles: {},
     navigator: {},
     onPress: null,
   }
 
-  constructor(props) {
-    super(props);
 
-    this.handlePress = this.handlePress.bind(this);
-  }
-
-
-  handlePress() {
+  handlePress = () => {
     Keyboard.dismiss();
     if (this.props.onPress) {
       this.props.onPress();
@@ -45,6 +41,7 @@ export default class ButtonBack extends React.PureComponent {
   render() {
     const {
       buttonStyles,
+      iconName,
       iconStyles,
       // navigator,
       // onPress,
@@ -57,22 +54,22 @@ export default class ButtonBack extends React.PureComponent {
         onPress={this.handlePress}
         style={[styles.button, { ...buttonStyles }]}
       >
-        <Aicon name={'arrow-left'} style={[styles.icon, { ...iconStyles }]} />
+        <Aicon name={iconName} style={[styles.icon, { ...iconStyles }]} />
       </Touchable>
     );
   }
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   button: {
     position: 'absolute',
-    left: 15,
-    top: 25,
+    left: '15@s',
+    top: '25@vs',
     zIndex: 10,
   },
   icon: {
     color: colors.white,
-    fontSize: 20,
+    fontSize: '20@ms0.2',
   },
 });

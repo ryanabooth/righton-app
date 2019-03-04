@@ -4,26 +4,24 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
 import Explore from './screens/Explore';
-import Create from './screens/Create';
-import Quizzes from './screens/Quizzes';
-import Maker from './screens/Maker';
+// import Launch from './screens/Launch';
+import Games from './screens/Games';
+import QuizMaker from './screens/QuizMaker';
 import Reports from './screens/Reports';
 import TabBarComponent from '../components/TabBarComponent';
 import { colors } from '../utils/theme';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
 
 
-const TeacherApp = createBottomTabNavigator({
+const TeacherTabNavigator = createBottomTabNavigator({
 
 
   Explore: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { screenProps } = props;
 
       return (
-        <Explore
-          {...screenProps}
-          {...otherProps}
-        />
+        <Explore {...screenProps} />
       );
     },
     navigationOptions: {
@@ -33,69 +31,59 @@ const TeacherApp = createBottomTabNavigator({
   },
 
 
-  Create: {
+  // Launch: {
+  //   screen: (props) => {
+  //     const { screenProps } = props;
+
+  //     return (
+  //       <Launch {...screenProps} />
+  //     );
+  //   },
+  //   navigationOptions: {
+  //     tabBarLabel: 'Launch',
+  //     tabBarIcon: ({ tintColor }) => (
+  //       <TabBarComponent icon={'tablet'} tintColor={tintColor} label={'Launch'} />
+  //     ),
+  //   },
+  // },
+
+
+  Games: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { navigation, screenProps } = props;
 
       return (
-        <Create
-          {...screenProps}
-          {...otherProps}
-        />
+        <Games navigation={navigation} {...screenProps} />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Create',
-      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'tablet'} tintColor={tintColor} label={'Create'} />
+      tabBarLabel: 'My Games',
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'database'} tintColor={tintColor} label={'My Games'} />,
     },
   },
 
 
-  Quizzes: {
+  QuizMaker: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { screenProps } = props;
 
       return (
-        <Quizzes
-          {...screenProps}
-          {...otherProps}
-        />
+        <QuizMaker {...screenProps} />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Quizzes',
-      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'database'} tintColor={tintColor} label={'Quizzes'} />,
-    },
-  },
-
-
-  Maker: {
-    screen: (props) => {
-      const { screenProps, ...otherProps } = props;
-
-      return (
-        <Maker
-          {...screenProps}
-          {...otherProps}
-        />
-      );
-    },
-    navigationOptions: {
-      tabBarLabel: 'Maker',
-      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'puzzle-piece'} tintColor={tintColor} label={'Maker'} />,
+      tabBarLabel: 'Quiz Maker',
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'puzzle-piece'} tintColor={tintColor} label={'Quiz Maker'} />,
     },
   },
 
 
   Reports: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { screenProps } = props;
 
       return (
-        <Reports
-          {...screenProps}
-          {...otherProps}
-        />
+        <Reports {...screenProps} />
       );
     },
     navigationOptions: {
@@ -111,8 +99,11 @@ const TeacherApp = createBottomTabNavigator({
   tabBarOptions: {
     activeTintColor: colors.white,
     inactiveTintColor: colors.dark,
+    iconStyle: {
+      padding: 0,
+    },
     labelStyle: {
-      fontSize: 10,
+      fontSize: moderateScale(12, 0.2),
       margin: 0,
       padding: 0,
     },
@@ -127,10 +118,35 @@ const TeacherApp = createBottomTabNavigator({
     showLabel: Platform.OS !== 'ios',
     style: {
       justifyContent: 'center',
+      height: verticalScale(55),
     },
     swipeEnabled: false,
   },
 });
+
+
+class TeacherApp extends React.Component {
+  static router = TeacherTabNavigator.router;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    };
+  }
+
+
+  render() {
+    const { navigation, screenProps } = this.props;
+
+    return (
+      <TeacherTabNavigator
+        navigation={navigation}
+        screenProps={{ ...this.props, ...screenProps }}
+      />
+    );
+  }
+}
 
 
 export default TeacherApp;

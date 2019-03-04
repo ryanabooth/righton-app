@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   Animated,
-  StyleSheet,
   Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
 
@@ -13,12 +13,29 @@ export default class Message extends React.Component {
     super();
     this.opacity = new Animated.Value(0);
     this.timeout = undefined;
-    this.handleTouchClose = this.handleTouchClose.bind(this);
   }
 
 
   componentDidMount() {
-    const { duration, timeout } = this.props;
+    if (this.props.message) {
+      this.handleAnimation(this.props.duration, this.props.timeout);
+    }
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.message !== nextProps.message && nextProps.message) {
+      this.handleAnimation(nextProps.duration, nextProps.timeout);
+    }
+  }
+
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+
+  handleAnimation(duration, timeout) {
     Animated.timing(
       this.opacity, {
         duration: duration || 1500,
@@ -32,12 +49,7 @@ export default class Message extends React.Component {
   }
 
 
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
-  }
-
-
-  handleTouchClose() {
+  handleTouchClose = () => {
     const { closeFunc } = this.props;
     Animated.timing(
       this.opacity, {
@@ -94,19 +106,19 @@ Message.defaultProps = {
   timeout: 0,
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: colors.darkGray,
     borderRadius: 100,
-    bottom: 40,
+    bottom: '40@vs',
     justifyContent: 'center',
-    marginHorizontal: 15,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    marginHorizontal: '15@s',
+    paddingHorizontal: '15@s',
+    paddingVertical: '10@vs',
     position: 'absolute',
-    zIndex: 10,
+    zIndex: 100,
   },
   message: {
     color: colors.white,

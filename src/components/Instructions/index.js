@@ -1,15 +1,16 @@
 import React from 'react';
 import {
   Modal,
+  RefreshControl,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
-import { colors, fonts } from '../../utils/theme';
+import { colors, deviceWidth, fonts } from '../../utils/theme';
 import ButtonWide from '../ButtonWide';
 
 
@@ -17,23 +18,25 @@ export default class Instructions extends React.Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.string),
     handleCloseModal: PropTypes.func.isRequired,
+    instructionIndex: PropTypes.number.isRequired,
+    incrementInstruction: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired,
   };
   
   static defaultProps = {
     data: [],
     handleCloseModal: () => {},
+    instructionIndex: 0,
+    incrementInstruction: () => {},
     visible: false,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       visibleItems: [],
     };
-
-    this.handleReveal = this.handleReveal.bind(this);
   }
 
 
@@ -43,22 +46,36 @@ export default class Instructions extends React.Component {
 
 
   setVisibleItems() {
-    const visibleItems = [true];
-    visibleItems[this.props.data.length - 1] = undefined;
+    const { data, instructionIndex } = this.props;
+    let visibleItems = [];
+    if (instructionIndex) {
+      visibleItems = this.props.data.slice(0, instructionIndex + 1);
+      if (this.props.data.length - 1 !== instructionIndex) {
+        visibleItems[this.props.data.length - 1] = undefined;
+        visibleItems.fill(undefined, instructionIndex + 1);
+      }
+    } else {
+      visibleItems = data.length === 1 ? [undefined] : [true];
+      if (this.props.data.length > 1) {
+        visibleItems[this.props.data.length - 1] = undefined;
+        visibleItems.fill(undefined, 1);
+      }
+    }
     this.setState({ visibleItems });
   }
 
 
-  handleReveal() {
+  handleReveal = () => {
     const { visibleItems } = this.state;
+    const { incrementInstruction } = this.props;
     const updatedVisibleItems = [...visibleItems];
     const index = updatedVisibleItems.indexOf(undefined);
     updatedVisibleItems[index] = true;
-    this.setState({ visibleItems: updatedVisibleItems });
+    this.setState({ visibleItems: updatedVisibleItems }, incrementInstruction);
   }
 
 
-  renderInstructionBox = (instruction, alignment) => (
+  renderInstructionBox = (instruction, alignment, lastElement) => (
     <View key={instruction} style={[styles.container, alignment === 'left' ? styles.justifyLeft : styles.justifyRight]}>
       {
         alignment === 'left' &&
@@ -67,6 +84,7 @@ export default class Instructions extends React.Component {
         </View>
       }
       <View style={[styles.box, alignment === 'left' ? styles.alignLeft : styles.alignRight]}>
+        {lastElement && <Text style={[styles.instruction, styles.bold]}>{'A: '}</Text>}
         <Text style={styles.instruction}>{ instruction }</Text>
       </View>
       {
@@ -79,9 +97,12 @@ export default class Instructions extends React.Component {
   );
 
 
-  renderRevealButton() {
-    const { visibleItems } = this.state;
+  renderRevealButton(visibleItems, data) {
     if (visibleItems[visibleItems.length - 1] === undefined) {
+      let label = 'Show next step';
+      if (visibleItems.indexOf(undefined) === data.length - 1) {
+        label = 'Show answer';
+      }
       return (
         <ButtonWide
           buttonStyles={{
@@ -91,7 +112,7 @@ export default class Instructions extends React.Component {
             marginTop: 25,
             position: 'relative',
           }}
-          label={'Reveal next hint'}
+          label={label}
           onPress={this.handleReveal}
           ripple={colors.black}
         />
@@ -119,14 +140,22 @@ export default class Instructions extends React.Component {
           >
             <View />
           </TouchableHighlight>
-          <ScrollView contentContainerStyle={styles.instructionsContainer}>
+          <ScrollView
+            contentContainerStyle={styles.instructionsContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={false}
+                onRefresh={handleCloseModal}
+              />
+            }
+          >
             {data.map((instruction, idx) => {
               if (!visibleItems[idx]) return null;
               const alignment = idx % 2 === 0 ? 'left' : 'right';
-              return this.renderInstructionBox(instruction, alignment);
+              return this.renderInstructionBox(instruction, alignment, idx === data.length - 1);
             })}
 
-            {this.renderRevealButton()}
+            {this.renderRevealButton(visibleItems, data)}
           </ScrollView>
         </View>
       </Modal>
@@ -135,41 +164,50 @@ export default class Instructions extends React.Component {
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   alignLeft: {
     borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 10,
-    marginLeft: 5,
+    borderBottomRightRadius: '10@s',
+    marginLeft: '5@s',
+    paddingLeft: '5@ms',
+    paddingRight: '10@ms',
   },
   alignRight: {
-    borderBottomLeftRadius: 10,
+    borderBottomLeftRadius: '10@s',
     borderBottomRightRadius: 0,
-    marginRight: 5,
+    marginRight: '5@s',
+    paddingLeft: '10@ms',
+    paddingRight: '5@ms',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
   box: {
     backgroundColor: colors.darkGray,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    padding: 10,
+    borderTopLeftRadius: '10@s',
+    borderTopRightRadius: '10@s',
+    flexDirection: 'row',
+    paddingVertical: '10@ms',
+    width: deviceWidth - moderateScale(70),
   },
   closeArrow: {
     alignSelf: 'center',
     borderColor: colors.white,
     borderTopWidth: 1,
     borderRightWidth: 1,
-    height: 15,
-    marginBottom: 25,
-    marginTop: 10,
+    height: '15@s',
+    marginBottom: '25@vs',
+    marginTop: '10@vs',
     transform: [
       { rotate: '135deg' },
     ],
-    width: 15,
+    width: '15@s',
   },
   container: {
     alignItems: 'flex-end',
     alignSelf: 'stretch',
     flexDirection: 'row',
-    margin: 10,
+    margin: '10@s',
   },
   instruction: {
     color: colors.white,
@@ -184,7 +222,7 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
     right: 0,
-    top: 250,
+    top: '250@vs',
   },
   justifyLeft: {
     justifyContent: 'flex-start',
@@ -194,14 +232,14 @@ const styles = StyleSheet.create({
   },
   teacher: {
     color: colors.dark,
-    fontSize: 20,
+    fontSize: '28@ms0.2',
   },
   teacherBubble: {
     alignItems: 'center',
     backgroundColor: colors.white,
-    borderRadius: 20,
-    height: 40,
+    borderRadius: 100,
+    height: '40@ms',
     justifyContent: 'center',
-    width: 40,
+    width: '40@ms',
   },
 });

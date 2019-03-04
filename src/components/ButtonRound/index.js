@@ -1,9 +1,10 @@
 import React from 'react';
-import { ActivityIndicator, Animated, Easing, Keyboard, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Animated, Easing, Keyboard, Text } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
-import { colors } from '../../utils/theme';
+import { colors, elevation } from '../../utils/theme';
 
 export default class ButtonRound extends React.PureComponent {
   constructor(props) {
@@ -13,8 +14,6 @@ export default class ButtonRound extends React.PureComponent {
     };
 
     this.animatedRotation = new Animated.Value(0);
-
-    this.handleAnimatedPress = this.handleAnimatedPress.bind(this);
   }
 
 
@@ -26,7 +25,7 @@ export default class ButtonRound extends React.PureComponent {
   }
 
 
-  handleAnimatedPress() {
+  handleAnimatedPress = () => {
     Keyboard.dismiss();
     if (this.props.animated) {
       Animated.timing(
@@ -72,7 +71,7 @@ export default class ButtonRound extends React.PureComponent {
         background={Touchable.Ripple(colors.primary, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handleAnimatedPress}
-        style={[styles.button, buttonStyles]}
+        style={[styles.button, buttonStyles, elevation]}
       >
         {
           activity ?
@@ -117,26 +116,21 @@ ButtonRound.defaultProps = {
 };
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   button: {
     alignItems: 'center',
     backgroundColor: colors.primary,
-    borderRadius: 25,
-    bottom: 15,
-    elevation: 2,
-    height: 45,
+    borderRadius: 100,
+    bottom: '15@vs',
+    height: '45@ms',
     justifyContent: 'center',
     position: 'absolute',
-    right: 15,
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowColor: colors.dark,
-    shadowOffset: { height: 1, width: 0 },
-    width: 45,
+    right: '15@s',
+    width: '45@ms',
     zIndex: 10,
   },
   icon: {
     color: colors.white,
-    fontSize: 20,
+    fontSize: '20@ms0.2',
   },
 });

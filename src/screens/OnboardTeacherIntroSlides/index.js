@@ -1,11 +1,11 @@
 import React from 'react';
 import { 
   Image,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Swiper from 'react-native-swiper';
 import { GradCap } from '../../assets/images';
 import { colors, fonts } from '../../utils/theme';
@@ -22,42 +22,8 @@ export default class OnboardIntroSlides extends React.PureComponent {
     rootNavigator: {},
   }
 
-  constructor(props) {
-    super(props);
-
-    this.swiper = undefined;
-    
-    // this.state = {
-    //   startButton: true,
-    // };
-
-    // this.onIndexChanged = this.onIndexChanged.bind(this);
-    // this.handleStart = this.handleStart.bind(this);
-  }
-
-
-  // onIndexChanged(index) {
-  //   if (index !== 1) {
-  //     this.setState({ startButton: false });
-  //   } else if (!this.state.startButton) {
-  //     this.setState({ startButton: true });
-  //   }
-  // }
-
-
-  // handleStart() {
-  //   this.navigateTo('First');
-  // }
-
-
-  // navigateTo(routeName) {
-  //   this.props.navigation.navigate(routeName);
-  // }
-
 
   render() {
-    // const { startButton } = this.state;
-
     return (
       <Swiper
         activeDotColor={colors.primary}
@@ -66,7 +32,6 @@ export default class OnboardIntroSlides extends React.PureComponent {
         loadMinimal={false}
         loop={false}
         onIndexChanged={this.onIndexChanged}
-        ref={(ref) => { this.swiper = ref; }}
         showsPagination
       >
 
@@ -83,30 +48,27 @@ export default class OnboardIntroSlides extends React.PureComponent {
           <View style={styles.textContainer}>
             <Text style={styles.title}>RightOn</Text>
             <Text style={styles.subtitle}>
-              Foster a culture of error where mistakes are expected, respected, and inspected
+              Foster a culture of error where mistakes are both expected and respected
             </Text>
           </View>
           <Image source={{ uri: GradCap }} style={styles.image} />
-          {/* {
-            startButton &&
-            <Touchable
-              activeOpacity={0.8}
-              background={Touchable.Ripple(colors.black, false)}
-              hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-              onPress={this.handleStart}
-              style={styles.startContainer}
-            >
-              <Text style={styles.start}>GET STARTED</Text>
-            </Touchable>
-          } */}
         </View>
 
         <View style={styles.container}>
           <View style={styles.textContainer}>
             <Text style={styles.title}>RightOn</Text>
             <Text style={styles.subtitle}>
-              Create quizzes not only faster, but also with better distractors -- 
-              ones that were generated and validated by your own students
+              Create better quizzes faster
+            </Text>
+          </View>
+          <Image source={{ uri: GradCap }} style={styles.image} />
+        </View>
+
+        <View style={styles.container}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>RightOn</Text>
+            <Text style={styles.subtitle}>
+              Reduce time grading, increase time engaging!
             </Text>
           </View>
           <Image source={{ uri: GradCap }} style={styles.image} />
@@ -117,7 +79,7 @@ export default class OnboardIntroSlides extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   accountCheck: {
     color: colors.white,
     fontSize: fonts.medium,
@@ -129,7 +91,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     alignItems: 'center',
-    bottom: 35,
+    bottom: '35@vs',
     position: 'absolute',
   },
   container: {
@@ -161,14 +123,14 @@ const styles = StyleSheet.create({
   subtitle: {
     color: colors.white,
     fontSize: fonts.medium,
-    marginTop: 10,
+    marginTop: '10@vs',
     textAlign: 'center',
   },
   textContainer: {
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: '20@s',
     position: 'absolute',
-    top: 65,
+    top: '65@vs',
   },
   title: {
     color: colors.white,

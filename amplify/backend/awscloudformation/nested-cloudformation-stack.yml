@@ -84,7 +84,7 @@
 				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/auth/cognito9238527f-cloudformation-template.yml",
 				"Parameters": {
 					"identityPoolName": "cognito9238527f_identitypool_9238527f",
-					"allowUnauthenticatedIdentities": false,
+					"allowUnauthenticatedIdentities": true,
 					"thirdPartyAuth": false,
 					"lambdaLogPolicy": "cognito9238527f_lambda_log_policy",
 					"openIdLambdaRoleName": "cognito9238527f_openid_lambda_role",
@@ -139,6 +139,65 @@
 				}
 			}
 		},
+		"storageGames": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/Games-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "Games",
+					"partitionKeyName": "GameID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
+		"storageStudentAccounts": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/StudentAccounts-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "StudentAccounts",
+					"partitionKeyName": "StudentID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
+		"storageTeacherAccounts": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/TeacherAccounts-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "TeacherAccounts",
+					"partitionKeyName": "TeacherID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
+		"storageQuizMaker": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/QuizMaker-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "QuizMaker",
+					"partitionKeyName": "GameID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
+		"storageRightOnS3": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"Parameters": {
+					"bucketName": "rightons3",
+					"authPolicyName": "s3_amplify_9a6fafd9",
+					"unauthPolicyName": "s3_amplify_9a6fafd9",
+					"authRoleName": "ightn-20181229134435-authRole",
+					"unauthRoleName": "ightn-20181229134435-unauthRole",
+					"authPermissions": "rw",
+					"unauthPermissions": "r"
+				}
+			}
+		},
 		"functionTeacherGameLambda": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -159,6 +218,86 @@
 				}
 			}
 		},
+		"functionTeacherAccountsLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherAccountsLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageTeacherAccountsName": {
+						"Fn::GetAtt": [
+							"storageTeacherAccounts",
+							"Outputs.Name"
+						]
+					},
+					"storageTeacherAccountsArn": {
+						"Fn::GetAtt": [
+							"storageTeacherAccounts",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"functionStudentAccountsLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/StudentAccountsLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageStudentAccountsName": {
+						"Fn::GetAtt": [
+							"storageStudentAccounts",
+							"Outputs.Name"
+						]
+					},
+					"storageStudentAccountsArn": {
+						"Fn::GetAtt": [
+							"storageStudentAccounts",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"functionQuizMakerLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/QuizMakerLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageQuizMakerName": {
+						"Fn::GetAtt": [
+							"storageQuizMaker",
+							"Outputs.Name"
+						]
+					},
+					"storageQuizMakerArn": {
+						"Fn::GetAtt": [
+							"storageQuizMaker",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"functionGamesLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/GamesLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageGamesName": {
+						"Fn::GetAtt": [
+							"storageGames",
+							"Outputs.Name"
+						]
+					},
+					"storageGamesArn": {
+						"Fn::GetAtt": [
+							"storageGames",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
 		"apiTeacherGameAPI": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -173,6 +312,86 @@
 					"functionTeacherGameLambdaArn": {
 						"Fn::GetAtt": [
 							"functionTeacherGameLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiTeacherAccountsAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherAccountsAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionTeacherAccountsLambdaName": {
+						"Fn::GetAtt": [
+							"functionTeacherAccountsLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionTeacherAccountsLambdaArn": {
+						"Fn::GetAtt": [
+							"functionTeacherAccountsLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiStudentAccountsAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/StudentAccountsAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionStudentAccountsLambdaName": {
+						"Fn::GetAtt": [
+							"functionStudentAccountsLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionStudentAccountsLambdaArn": {
+						"Fn::GetAtt": [
+							"functionStudentAccountsLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiQuizMakerAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/QuizMakerAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionQuizMakerLambdaName": {
+						"Fn::GetAtt": [
+							"functionQuizMakerLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionQuizMakerLambdaArn": {
+						"Fn::GetAtt": [
+							"functionQuizMakerLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiGamesAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/GamesAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionGamesLambdaName": {
+						"Fn::GetAtt": [
+							"functionGamesLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionGamesLambdaArn": {
+						"Fn::GetAtt": [
+							"functionGamesLambda",
 							"Outputs.Arn"
 						]
 					}

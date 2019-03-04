@@ -2,26 +2,35 @@ import React from 'react';
 import {
   Modal,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
 
 
 export default class SelectionModal extends React.PureComponent {
-  renderOneTouchableItem = (item, onSelect) => (
-    <Touchable
-      key={item.value}
-      onPress={() => onSelect(item.value)}
-    >
-      <View style={[styles.itemContainer, styles.center]}>
-        <Text style={styles.item}>{ item.label }</Text>
-      </View>
-    </Touchable>
-  );
+  renderOneTouchableItem = (item, onSelect) => {
+    if (item.value === 'section') {
+      return (
+        <View key={item.label} style={[styles.itemContainer, styles.center]}>
+          <Text style={styles.section}>{ item.label }</Text>
+        </View>
+      );
+    }
+    return (
+      <Touchable
+        key={item.value}
+        onPress={() => onSelect(item.value)}
+      >
+        <View style={[styles.itemContainer, styles.center]}>
+          <Text style={styles.item}>{ item.label }</Text>
+        </View>
+      </Touchable>
+    );
+  }
 
 
   renderTwoTouchableItems = (item, onSelect) => (
@@ -116,13 +125,13 @@ SelectionModal.defaultProps = {
   visible: false,
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   center: {
     justifyContent: 'center',
   },
   closeContainer: {
     flex: 0.5,
-    height: 150,
+    height: '150@vs',
   },
   flexOne: {
     flex: 0.1,
@@ -136,15 +145,20 @@ const styles = StyleSheet.create({
   item: {
     color: colors.dark,
     fontSize: fonts.medium,
+    textAlign: 'center',
   },
   itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 15,
-    paddingVertical: 15,
+    marginHorizontal: '15@s',
+    paddingVertical: '15@vs',
   },
   modalContainer: {
     flex: 1,
+  },
+  section: {
+    fontSize: fonts.medium,
+    fontWeight: 'bold',
   },
   selectionContainer: {
     backgroundColor: colors.white,
@@ -152,8 +166,8 @@ const styles = StyleSheet.create({
   },
   scrollview: {
     flexGrow: 1,
-    paddingBottom: 25,
-    paddingTop: 15,
+    paddingBottom: '25@vs',
+    paddingTop: '15@vs',
   },
   title: {
     color: colors.white,
@@ -167,6 +181,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: colors.dark,
     justifyContent: 'center',
-    paddingVertical: 15,
+    paddingVertical: '15@vs',
   },
 });

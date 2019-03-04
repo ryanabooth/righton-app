@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Text,
   TouchableOpacity,
-  StyleSheet,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet, verticalScale } from 'react-native-size-matters';
 import ButtonWide from '../../components/ButtonWide';
 import { colors, fonts } from '../../utils/theme';
 import OnboardTeacherIntroSlides from '../OnboardTeacherIntroSlides';
@@ -13,26 +13,30 @@ import OnboardTeacherIntroSlides from '../OnboardTeacherIntroSlides';
 export default class OnboardTeacherRouter extends React.PureComponent {
   static propTypes = {
     navigation: PropTypes.shape({ navigate: PropTypes.func }),
+    screenProps: PropTypes.shape({
+      handleSetAppState: PropTypes.func.isRequired,
+    }),    
   }
   
   static defaultProps = {
     navigation: {},
+    screenProps: {
+      handleSetAppState: () => {},
+    },
   }
   
-  constructor(props) {
-    super(props);
-    
-    this.handleTeacherApp = this.handleTeacherApp.bind(this);
-    this.handleTeacherOnboard = this.handleTeacherOnboard.bind(this);
+
+  handleTeacherOnboard = () => { 
+    this.props.navigation.navigate('OnboardAccount');
   }
 
 
-  handleTeacherOnboard() { 
-    this.props.navigation.navigate('TeacherFirst');
-  }
-
-
-  handleTeacherApp() {
+  handleTeacherApp = () => {
+    this.props.screenProps.handleSetAppState('deviceSettings', {
+      role: 'teacher',
+      quizTime: '1:00',
+      trickTime: '3:00',
+    });
     this.props.navigation.navigate('TeacherApp');
   }
 
@@ -44,12 +48,12 @@ export default class OnboardTeacherRouter extends React.PureComponent {
         <OnboardTeacherIntroSlides />
         
         <ButtonWide
-          buttonStyles={{ bottom: 65 }}
-          label={'Sign Up / Sign In'}
+          buttonStyles={{ bottom: verticalScale(65) }}
+          label={'Log In / Sign Up'}
           onPress={this.handleTeacherOnboard}
         />
         <TouchableOpacity
-          activeOpacity={0.8}
+          activeOpacity={1}
           onPress={this.handleTeacherApp}
           style={styles.maybeContainer}
         >
@@ -60,7 +64,7 @@ export default class OnboardTeacherRouter extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   mainContainer: {
     backgroundColor: colors.dark,
     flex: 1,
@@ -75,7 +79,9 @@ const styles = StyleSheet.create({
   maybeContainer: {
     // Removing background color causes Swiper dot primary color to shine through
     backgroundColor: colors.dark,
-    bottom: 20,
+    bottom: 0,
+    height: '65@vs',
+    justifyContent: 'center',
     left: 0,
     position: 'absolute',
     right: 0,

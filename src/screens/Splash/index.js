@@ -6,11 +6,17 @@ import debug from '../../utils/debug';
 
 export default class Splash extends React.Component {
   static propTypes = {
+    deviceSettings: PropTypes.shape({
+      role: PropTypes.string,
+    }),
     navigation: PropTypes.shape({ type: PropTypes.func }),
     session: PropTypes.shape({ type: PropTypes.string }),
   }
   
   static defaultProps = {
+    deviceSettings: {
+      role: '',
+    },
     navigation: {},
     session: {},
   }
@@ -29,33 +35,45 @@ export default class Splash extends React.Component {
 
 
   async componentDidMount() {
-    const { session } = this.props;
-
+    let session = {};
     try {
       await new Promise(async (resolve, reject) => setTimeout(() => {
+        session = this.props.session;
         if (!session) {
           reject('No current session');
           return;
         }
 
         resolve();
-      }, __DEV__ ? 500 : 2000));
+      }, 2000));
     } catch (exception) {
       debug.log('Rejected session from Splash:', exception);
     }
 
-    // debug.log(JSON.stringify(session));
     const loggedIn = session && session.isValid && session.isValid();
 
     this.setLoading();
+
+    debug.log('User session:', JSON.stringify(session));
 
     if (__DEV__) {
       this.navigateTo('OnboardAppRouter');
       return;
     }
 
-    // TODO Check whether app is signed up for Teacher or Student and route accordingly
-    this.navigateTo(loggedIn ? 'TeacherApp' : 'OnboardAppRouter');
+    if (loggedIn) {
+      if (this.props.deviceSettings.role === 'teacher') {
+        this.navigateTo('TeacherApp');
+      } else {
+        this.navigateTo('StudentApp');
+      }
+    } else if (this.props.deviceSettings.role === 'teacher') {
+      this.navigateTo('OnboardAccount');
+    } else if (this.props.deviceSettings.role === 'student') {
+      this.navigateTo('StudentFirst');
+    } else {
+      this.navigateTo('OnboardAppRouter');
+    }
   }
 
 

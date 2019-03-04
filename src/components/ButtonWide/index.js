@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   Keyboard,
-  StyleSheet,
   Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { scale, ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
-import { colors, deviceWidth, fonts } from '../../utils/theme';
+import { colors, deviceWidth, elevation, fonts } from '../../utils/theme';
 
 export default class ButtonWide extends React.PureComponent {
   static propTypes = {
@@ -24,15 +24,9 @@ export default class ButtonWide extends React.PureComponent {
     ripple: '',
     textStyles: {},
   };
-  
-  constructor(props) {
-    super(props);
-
-    this.handlePress = this.handlePress.bind(this);
-  }
 
 
-  handlePress() {
+  handlePress = () => {
     Keyboard.dismiss();
     this.props.onPress();
   }
@@ -53,7 +47,7 @@ export default class ButtonWide extends React.PureComponent {
         background={Touchable.Ripple(ripple || colors.primary, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handlePress}
-        style={[styles.button, buttonStyles]}
+        style={[styles.button, buttonStyles, elevation]}
       >
         <Text style={[styles.label, textStyles]}>{ label || 'Okay' }</Text>
       </Touchable>
@@ -62,21 +56,16 @@ export default class ButtonWide extends React.PureComponent {
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   button: {
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: colors.primary,
-    bottom: 15,
-    elevation: 2,
-    height: 65,
+    bottom: '15@vs',
+    height: '65@vs',
     justifyContent: 'center',
     position: 'absolute',
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowColor: colors.dark,
-    shadowOffset: { height: 1, width: 0 },
-    width: deviceWidth - 75,
+    width: deviceWidth - scale(75),
     zIndex: 10,
   },
   label: {

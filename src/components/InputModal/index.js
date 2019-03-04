@@ -1,23 +1,29 @@
 import React from 'react';
 import {
+  Keyboard,
   Modal,
-  StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
+import { scale, ScaledSheet, verticalScale, moderateScale } from 'react-native-size-matters';
 import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils/theme';
 
 
 export default class InputModal extends React.PureComponent {
   static propTypes = {
+    autoCapitalize: PropTypes.string,
+    autoCorrect: PropTypes.bool,
+    backgroundColor: PropTypes.string,
     closeModal: PropTypes.func.isRequired,
     keyboardType: PropTypes.string,
     height: PropTypes.number,
+    hiddenLabel: PropTypes.bool,
     input: PropTypes.string,
     inputLabel: PropTypes.string,
+    labelStyles: PropTypes.shape({}),
     maxLength: PropTypes.number,
     multiline: PropTypes.bool,
     placeholder: PropTypes.string,
@@ -29,93 +35,83 @@ export default class InputModal extends React.PureComponent {
   }
 
   static defaultProps = {
+    autoCapitalize: 'none',
+    autoCorrect: false,
+    backgroundColor: colors.lightGray,
     closeModal: () => {},
     keyboardType: 'default',
     height: 45,
+    hiddenLabel: true,
     input: '',
     inputLabel: '',
+    labelStyles: {},
     maxLength: 50,
     multiline: false,
     placeholder: '',
     visible: false,
     spellCheck: false,
-    width: deviceWidth - 30,
+    width: deviceWidth - scale(30),
     x: Number.POSITIVE_INFINITY,
     y: Number.POSITIVE_INFINITY,
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      input: '',
+      minY: deviceHeight / 2,
+      input: props.input || '',
     };
-    this.handleInput = this.handleInput.bind(this);
-    this.handleInputBlur = this.handleInputBlur.bind(this);
-    this.handleInputRef = this.handleInputRef.bind(this);
-    this.handleInputSubmit = this.handleInputSubmit.bind(this);
   }
 
 
   componentDidMount() {
-    this.setInputState();
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.keyboardDidShow(e));
     setTimeout(() => this.inputRef.focus(), 100);
   }
 
 
-  setInputState() {
-    if (this.props.input) {
-      this.setState({ input: this.props.input });
+  componentWillUnmount() {
+    Keyboard.removeListener('keyboardDidShow', this.keyboardDidShow);
+  }
+
+
+  keyboardDidShow = (e) => {
+    const minY = deviceHeight - e.endCoordinates.height;
+    if (this.state.minY !== minY) {
+      this.setState({ minY });
     }
   }
 
 
-  handleInputBlur() {
+  handleInputBlur = () => {
     this.props.closeModal(this.state.input, this.props.inputLabel);
   }
 
 
-  handleInput(val) {
-    this.setState({ input: val });
-  }
+  handleInput = val => this.setState({ input: val });
 
 
-  handleInputRef(ref) {
-    this.inputRef = ref;
-  }
+  handleInputRef = (ref) => { this.inputRef = ref; }
 
 
-  handleInputSubmit() {
+  handleInputSubmit = () => {
     this.props.closeModal(this.state.input, this.props.inputLabel);
   }
 
 
-  renderTextInput() {
+  renderTextInput = (xAxis, yAxis, bottom, height) => {
     const { input } = this.state;
     const {
+      autoCapitalize,
+      autoCorrect,
       keyboardType,
-      height,
       maxLength,
       multiline,
       placeholder,
       spellCheck,
       width,
-      x,
-      y,
     } = this.props;
-
-    let yAxis = deviceHeight / 2;
-    let xAxis = 15;
-    let bottom;
-    if (y < deviceHeight / 2) {
-      yAxis = y;
-    } else {
-      bottom = true;
-    }
-
-    if (x < deviceWidth) {
-      xAxis = x;
-    }
 
     return (
       <View 
@@ -126,7 +122,9 @@ export default class InputModal extends React.PureComponent {
           bottom ? { bottom: 15 } : { top: yAxis },
         ]}
       >
-        <TextInput
+        <AutoGrowingTextInput
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
           keyboardType={keyboardType}
           maxLength={maxLength}
           multiline={multiline}
@@ -140,7 +138,7 @@ export default class InputModal extends React.PureComponent {
           spellCheck={spellCheck}
           style={[styles.input, { height, width }]}
           textAlign={'left'}
-          underlineColorAndroid={colors.lightGray}
+          underlineColorAndroid={colors.white}
           value={input}
         />
         <Text style={styles.length}>{ maxLength - input.length }</Text>
@@ -151,9 +149,34 @@ export default class InputModal extends React.PureComponent {
 
   render() {
     const {
+      backgroundColor,
       closeModal,
+      height,
+      hiddenLabel,
+      inputLabel,
+      labelStyles,
       visible,
+      x,
+      y,
     } = this.props;
+
+    const { minY } = this.state;
+
+    let yAxis = minY;
+    let xAxis = scale(15);
+    let bottom;
+    const scaledHeight = verticalScale(height);
+    if (y < minY) {
+      yAxis = y;
+    } else {
+      bottom = true;
+    }
+
+    if (x < deviceWidth) {
+      xAxis = x;
+    }
+
+    const ms25 = moderateScale(25);
 
     return (
       <Modal
@@ -162,25 +185,34 @@ export default class InputModal extends React.PureComponent {
         transparent
         visible={visible}
       >
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor }]}>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={this.handleInputSubmit}
             style={styles.closeContainer}
           />
-          {this.renderTextInput()}
+          {!hiddenLabel &&
+            <Text
+              style={[
+                styles.inputLabel,
+                { left: xAxis },
+                bottom ? { bottom: 15 + ms25 + scaledHeight } : { top: yAxis - ms25 },
+                labelStyles,
+              ]}
+            >{ inputLabel }</Text>}
+
+          {this.renderTextInput(xAxis, yAxis, bottom, scaledHeight)}
         </View>
       </Modal>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   closeContainer: {
     flex: 1,
   },
   container: {
-    backgroundColor: colors.lightGray,
     flex: 1,
     opacity: 0.8,
   },
@@ -188,8 +220,8 @@ const styles = StyleSheet.create({
     color: colors.dark,
     fontSize: fonts.medium,
     fontWeight: 'bold',
-    paddingLeft: 10,
-    paddingRight: 25,
+    paddingLeft: '10@s',
+    paddingRight: '25@s',
   },
   inputContainer: {
     backgroundColor: colors.white,
@@ -198,10 +230,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
   },
+  inputLabel: {
+    color: colors.primary,
+    fontSize: fonts.small,
+    position: 'absolute',
+  },
   length: {
     color: colors.lightGray,
     fontSize: fonts.small,
     position: 'absolute',
-    right: 5,
+    right: '5@s',
   },
 });
